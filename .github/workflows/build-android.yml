@@ -1,0 +1,42 @@
+name: Build Android
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build for Android
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+
+      - name: Cache Library
+        uses: actions/cache@v3
+        with:
+          path: ProjectAria/Library
+          key: Library-Android-${{ hashFiles('ProjectAria/Assets/**', 'ProjectAria/Packages/**', 'ProjectAria/ProjectSettings/**') }}
+          restore-keys: |
+            Library-Android-
+
+      - name: Build project
+        uses: game-ci/unity-builder@v2
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          projectPath: ProjectAria
+          targetPlatform: Android
+          buildMethod: BuildScript.BuildAndroid
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Build-Android
+          path: build/Android
