@@ -1,0 +1,49 @@
+# iOS build pipeline (requires macOS runner — uses minutes)
+# Uncomment triggers once iOS is configured
+
+name: Build iOS
+
+on:
+  workflow_dispatch:  # manual only (macOS runners cost more)
+  # push:
+  #   tags: ['v*']
+
+jobs:
+  build:
+    name: Build iOS Xcode project
+    runs-on: macos-latest
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          submodules: recursive
+
+      - name: Cache Library
+        uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-${{ runner.os }}-${{ hashFiles('Packages/manifest.json') }}
+          restore-keys: |
+            Library-${{ runner.os }}-
+
+      - name: Build iOS
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          unityVersion: 2022.3.20f1
+          targetPlatform: iOS
+          buildMethod: ProjectAria.Editor.BuildScript.BuildIOS
+          outputPath: Builds/iOS/ProjectAria
+
+      - name: Upload Xcode project
+        uses: actions/upload-artifact@v4
+        with:
+          name: ProjectAria-iOS-${{ github.sha }}
+          path: Builds/iOS/ProjectAria
+          if-no-files-found: error
+          retention-days: 14

@@ -1,0 +1,25 @@
+# Code Owners — auto-assigns reviewers on PR
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything
+* @aria-maintainers
+
+# Module owners
+/Assets/Scripts/Core/         @aria-architects
+/Assets/Scripts/Player/       @aria-gameplay
+/Assets/Scripts/World/        @aria-engine
+/Assets/Scripts/Combat/       @aria-gameplay
+/Assets/Scripts/Building/     @aria-gameplay
+/Assets/Scripts/Farming/      @aria-gameplay
+/Assets/Scripts/Crafting/     @aria-gameplay
+/Assets/Scripts/Inventory/    @aria-gameplay
+/Assets/Scripts/NPC/          @aria-content
+/Assets/Scripts/Quest/        @aria-content
+/Assets/Scripts/Multiplayer/  @aria-netcode
+/Assets/Scripts/Optimization/ @aria-engine
+/Assets/Scripts/UI/           @aria-ui
+/Assets/Scripts/Audio/        @aria-audio
+/Assets/Scripts/Controls/     @aria-ui
+/Assets/Editor/               @aria-build
+/BuildTools/                  @aria-build
+/.github/                     @aria-devops
