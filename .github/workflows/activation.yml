@@ -1,0 +1,19 @@
+name: Acquire License
+
+on:
+  workflow_dispatch:
+
+jobs:
+  activation:
+    name: Request manual license file
+    runs-on: ubuntu-latest
+    steps:
+      - name: Request manual license file
+        uses: game-ci/unity-request-license@v2
+        id: get-alf
+
+      - name: Upload ALF
+        uses: actions/upload-artifact@v4
+        with:
+          name: UnityLicenseRequest
+          path: ${{ steps.get-alf.outputs.filePath }}
