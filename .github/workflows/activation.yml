@@ -1,19 +1,27 @@
 name: Acquire License
-
 on:
   workflow_dispatch:
-
 jobs:
   activation:
     name: Request manual license file
     runs-on: ubuntu-latest
     steps:
-      - name: Request manual license file
-        uses: game-ci/unity-request-activation-file@v2
-        id: get-alf
+      # Bước 1: Checkout code (cần thiết để action biết project Unity)
+      - name: Checkout project
+        uses: actions/checkout@v4
 
+      # Bước 2: Tạo file kích hoạt (.alf) - Thay thế action cũ
+      - name: Request manual license file
+        uses: game-ci/unity-editor@v4
+        id: get-alf
+        with:
+          # 👇 QUAN TRỌNG: Bạn PHẢI điền đúng version Unity của project mình
+          unityVersion: 2022.3.22f1  # Ví dụ: 2022.3.22f1, 2021.3.35f1, ...
+          action: get-activation-file
+
+      # Bước 3: Upload file .alf lên GitHub Artifacts để tải về
       - name: Upload ALF
         uses: actions/upload-artifact@v4
         with:
           name: UnityLicenseRequest
-          path: ${{ steps.get-alf.outputs.filePath }}
+          path: ${{ steps.get-alf.outputs.activationFile }}  # Đường dẫn output đã đổi tên biến
