@@ -1,0 +1,28 @@
+name: Unzip Project
+
+on:
+  push:
+    paths:
+      - '**.zip'
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Unzip file
+        run: |
+          unzip -o ProjectAria.zip -d .
+          rm ProjectAria.zip
+
+      - name: Commit and Push unzipped files
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "chore: auto unzip project files" || exit 0
+          git push
