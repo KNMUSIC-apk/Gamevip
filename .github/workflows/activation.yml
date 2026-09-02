@@ -6,19 +6,22 @@ jobs:
     name: Request manual license file
     runs-on: ubuntu-latest
     steps:
-      # BẮT BUỘC: Checkout code để action đọc được version Unity
+      # Cần checkout code để đọc được phiên bản Unity (ProjectVersion.txt)
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ĐÃ SỬA: Dùng action chính thức của GitHub
+      # Tạo file .alf
       - name: Request manual license file
-        uses: github-actions/unity-activation@v1
+        uses: game-ci/unity-builder@v4
         id: get-alf
+        with:
+          # 👇 BẮT BUỘC: Điền đúng version Unity của bạn (lấy từ file ProjectVersion.txt)
+          unityVersion: 2022.3.22f1   # Thay bằng version thực tế của bạn
+          action: getActivationFile   # Cờ báo chỉ lấy file activation, không build
 
-      # Upload file .alf lên Artifacts để tải về
+      # Upload file .alf lên Artifacts
       - name: Upload ALF
         uses: actions/upload-artifact@v4
         with:
           name: UnityLicenseRequest
-          # Đường dẫn output của action chính thức thường là filePath
-          path: ${{ steps.get-alf.outputs.filePath }}
+          path: ${{ steps.get-alf.outputs.filePath }}  # Đường dẫn file .alf
